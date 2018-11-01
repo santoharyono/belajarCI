@@ -1,0 +1,11 @@
+language: java
+
+jdk:
+  - oraclejdk8
+
+services:
+  - mysql
+
+before_install:
+  - mysql -u root -e "drop database if exists belajarci"
+  - mysql -u root -e "create database belajarci"
