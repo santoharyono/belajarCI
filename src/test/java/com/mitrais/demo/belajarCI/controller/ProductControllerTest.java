@@ -4,9 +4,15 @@
  */
 package com.mitrais.demo.belajarCI.controller;
 
-import com.mitrais.demo.belajarCI.entity.Product;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
+import static io.restassured.RestAssured.delete;
+import static io.restassured.RestAssured.get;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
+
+import java.math.BigDecimal;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,10 +21,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.math.BigDecimal;
+import com.mitrais.demo.belajarCI.entity.Product;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 
 /**
  * @author Santo Haryono Weli
@@ -98,5 +104,60 @@ public class ProductControllerTest {
                 .post(BASE_URL + "/")
                 .then()
                 .statusCode(400);
+    }
+
+    @Test
+    public void testFindAll() {
+        get(BASE_URL + "/")
+                .then()
+                .body("totalElements", equalTo(1))
+                .body("content.id", hasItem("abc123"));
+    }
+
+    @Test
+    public void testFindById() {
+        get(BASE_URL + "/abc123")
+                .then()
+                .statusCode(200)
+                .body("id", equalTo("abc123"))
+                .body("code", equalTo("P-001"));
+
+        get(BASE_URL + "/999")
+                .then()
+                .statusCode(400);
+    }
+
+    @Test
+    public void testUpdate() {
+        Product product = new Product();
+        product.setCode("PX-009");
+        product.setName("Product test 009");
+        product.setPrice(BigDecimal.valueOf(1000));
+
+        given()
+                .body(product)
+                .contentType(ContentType.JSON)
+                .when()
+                .put(BASE_URL + "/abc123")
+                .then()
+                .statusCode(200);
+
+        get(BASE_URL + "/abc123")
+                .then()
+                .statusCode(200)
+                .body("id", equalTo("abc123"))
+                .body("code", equalTo("PX-009"))
+                .body("name", equalTo("Product test 009"));
+    }
+
+    @Test
+    public void testDelete() {
+        delete(BASE_URL + "/abc123")
+                .then()
+                .statusCode(200);
+
+        delete(BASE_URL + "/999")
+                .then()
+                .statusCode(404);
     }
 }
