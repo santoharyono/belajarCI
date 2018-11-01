@@ -12,3 +12,6 @@ before_install:
   - mysql -u root -e "create database belajarci"
   - mysql -u root -e "grant all privileges on belajarci.* to 'user'@'localhost'"
   - chmod +x mvnw
+
+after_success:
+  - mvn jacoco:report coveralls:report
