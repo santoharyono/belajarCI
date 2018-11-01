@@ -7,7 +7,7 @@ services:
   - mysql
 
 before_install:
-  - mysql -u root -e "grant all privileges on belajarci.* to root@localhost identified by 'root'"
+  - mysql -u root -e "grant all privileges on belajarci.* to 'root'@'localhost';"
   - mysql -u root -e "drop database if exists belajarci"
   - mysql -u root -e "create database belajarci"
   - chmod +x mvnw
