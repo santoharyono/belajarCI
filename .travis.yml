@@ -9,3 +9,4 @@ services:
 before_install:
   - mysql -u root -e "drop database if exists belajarci"
   - mysql -u root -e "create database belajarci"
+  - chmod +x mvnw
