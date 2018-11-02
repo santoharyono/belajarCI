@@ -15,3 +15,9 @@ before_install:
 
 after_success:
   - mvn jacoco:report coveralls:report
+
+deploy:
+  provider: heroku
+  app: belajar-ci
+  on:
+    repo:santoharyono/belajarCI
