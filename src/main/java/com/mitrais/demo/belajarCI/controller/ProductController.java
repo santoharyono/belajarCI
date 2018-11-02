@@ -58,12 +58,7 @@ public class ProductController {
         if (product == null)
             throw new ParamIllegalException("Parameter cannot be null");
 
-        Optional<Product> productOptional = productDao.findById(product.getId());
-
-        if (productOptional.isPresent())
-            return productOptional.get();
-        else
-            return new Product();
+            return productDao.findById(product.getId()).get();
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
